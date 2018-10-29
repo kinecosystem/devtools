@@ -1,0 +1,6 @@
+.idea
+scripts/bin
+node_modules
+scripts/src/**/*.js
+.tags
+.DS_Store
