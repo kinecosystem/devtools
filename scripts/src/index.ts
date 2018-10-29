@@ -70,7 +70,8 @@ async function main() {
 	const decoded = jsonwebtoken.decode(jwt, { complete: true }) as JWTContent<RegisterPayload, "register">;
 	console.log(`${decoded.payload.user_id}@${deviceId}) address: <${keypair.publicKey()}> secret key: <${keypair.secret()}>`);
 	try {
-		await register(marketplace_base, {device_id: deviceId, sign_in_type: "jwt", wallet_address: keypair.publicKey(), jwt });
+		const authToken = await register(marketplace_base, {device_id: deviceId, sign_in_type: "jwt", wallet_address: keypair.publicKey(), jwt });
+		console.log(`auth token: <${authToken.token}>`);
 	} catch (err) {
 		const apiError: ApiError = err.response!.data;
 		throw new Error(apiError.message);
