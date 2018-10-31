@@ -1,6 +1,6 @@
 # Developer tools for KIN Devs
 
-## create-wallet
+## `create-wallet`
 A script to createa local address and private key and run the register process to assign these keys to a user.
 
 ### Usage
