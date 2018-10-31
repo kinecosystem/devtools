@@ -1,4 +1,4 @@
-# Developer tools for KIN Devs
+# Developer Tools for KIN Devs
 
 ## `create-wallet`
 A script to createa local address and private key and run the register process to assign these keys to a user.
@@ -23,11 +23,11 @@ auth token: <SOME_TOKEN>
 ### Test User Creation
 Using the token created from the previous step:
 
-#### For Playground
+#### Playground
 ```
 $> curl -IH 'Authorization: Bearer SOME_TOKEN' https://api.kinplayground.com/v1/users/me
 ```
-#### For Production
+#### Production
 ```
 $> curl -IH 'Authorization: Bearer SOME_TOKEN' https://api.kinmarketplace.com/v1/users/me
 ```
@@ -36,11 +36,11 @@ Should return `HTTP 200 OK`.
 
 ### Test Wallet Creation
 Using the public address:
-#### For Playground
+#### Playground
 ```
 curl -I https://stellar.kinplayground.com/accounts/USER_PUBLIC_ADDRESS
 ```
-#### For Production
+#### Production
 ```
 curl -I https://horizon-kin-ecosystem.kininfrastructure.com/accounts/USER_PUBLIC_ADDRESS
 ```
