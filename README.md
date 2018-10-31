@@ -22,10 +22,26 @@ auth token: <SOME_TOKEN>
 
 ### Test User Creation
 Using the token created from the previous step:
+
+#### For Playground
 ```
-$> curl -H 'Authorization: Bearer SOME_TOKEN' api.kinplayground.com/v1/users/me
+$> curl -IH 'Authorization: Bearer SOME_TOKEN' https://api.kinplayground.com/v1/users/me
 ```
-Should return HTTP 200 OK and:
+#### For Production
 ```
-{"stats":{"earn_count":0,"spend_count":0}}
+$> curl -IH 'Authorization: Bearer SOME_TOKEN' https://api.kinmarketplace.com/v1/users/me
 ```
+
+Should return `HTTP 200 OK`.
+
+### Test Wallet Creation
+Using the public address:
+#### For Playground
+```
+curl -I https://stellar.kinplayground.com/accounts/USER_PUBLIC_ADDRESS
+```
+#### For Production
+```
+curl -I https://horizon-kin-ecosystem.kininfrastructure.com/accounts/USER_PUBLIC_ADDRESS
+```
+Should return `HTTP 200 OK`.
