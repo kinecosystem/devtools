@@ -47,7 +47,7 @@ curl -I https://horizon-kin-ecosystem.kininfrastructure.com/accounts/USER_PUBLIC
 Should return `HTTP 200 OK`.
 
 #### Get Balance
-Using the `jq` tool, get the KIN balance:
+Using the [`jq`](https://stedolan.github.io/jq/) tool, get the KIN balance:
 #### Playground
 ```
 curl https://stellar.kinplayground.com/accounts/USER_PUBLIC_ADDRESS | jq -r '.balances[] | select(.asset_code=="KIN") | .balance'
