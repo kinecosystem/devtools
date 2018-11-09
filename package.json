@@ -12,6 +12,9 @@
     "build": "tsc -p scripts/tsconfig.json",
     "create-wallet": "node scripts/bin/index.js"
   },
+  "bin": {
+    "create-wallet": "./scripts/bin/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/kinecosystem/devtools"

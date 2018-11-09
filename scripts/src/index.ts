@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Keypair, KinNetwork, createWallet } from "@kinecosystem/kin.js";
 import * as jsonwebtoken from "jsonwebtoken";
 import axios from "axios";
