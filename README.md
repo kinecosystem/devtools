@@ -1,5 +1,13 @@
 # Developer Tools for KIN Devs
 
+## building the project
+
+This is a typescript project, therfore it needs to be transpiled
+```
+npm run lint
+npm run build
+```
+
 ## `create-wallet`
 A script to createa local address and private key and run the register process to assign these keys to a user.
 
