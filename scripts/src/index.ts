@@ -3,7 +3,7 @@ import * as jsonwebtoken from "jsonwebtoken";
 import axios from "axios";
 
 const PRODUCTION = "https://api.kinmarketplace.com";
-const PLAYGROUND = "https://api.kinplayground.com";
+const BETA = "https://api.kinecosystembeta.com";
 export type JWTClaims<SUB extends string> = {
 	iss: string; // issuer - the app_id
 	exp: number; // expiration
@@ -66,19 +66,19 @@ async function getConfig(base: string) {
 async function main() {
 	const keypair = Keypair.random();
 	if (process.argv.length < 5) {
-		throw new Error("usage: npm run create-wallet -- <playground|production> <device_id> <JWT>");
+		throw new Error("usage: npm run create-wallet -- <beta|production> <device_id> <JWT>");
 	}
 	const env = process.argv[2];
 	const deviceId = process.argv[3];
 	const jwt = process.argv[4];
 	let marketplace_base: string;
 
-	if (env === "playground") {
-		marketplace_base = PLAYGROUND;
+	if (env === "beta") {
+		marketplace_base = BETA;
 	} else if (env === "production") {
 		marketplace_base = PRODUCTION;
 	} else {
-		throw new Error("env must be playground or production");
+		throw new Error("env must be beta or production");
 	}
 
 	const decoded = jsonwebtoken.decode(jwt, { complete: true }) as JWTContent<RegisterJWTPayload, "register">;
