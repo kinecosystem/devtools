@@ -1,9 +1,18 @@
 import { Keypair, KinNetwork, createWallet } from "@kinecosystem/kin.js";
+import { ExportToCsv, Options as ExportCsvOptions } from "export-to-csv";
 import * as jsonwebtoken from "jsonwebtoken";
 import axios from "axios";
+import csvParse = require("csv-parse/lib/sync");
+
+import { writeFileSync, readFileSync, existsSync as fileExistsSync } from "fs";
+
+import { Options as CsvParseOptions } from "csv-parse";
+
+type CsvParse = ((input: Buffer, options?: CsvParseOptions) => any) & typeof csvParse;
 
 const PRODUCTION = "https://api.kinmarketplace.com";
 const BETA = "https://api.kinecosystembeta.com";
+const TEST = "http://api.kinecosystemtest.com";
 export type JWTClaims<SUB extends string> = {
 	iss: string; // issuer - the app_id
 	exp: number; // expiration
@@ -21,84 +30,123 @@ export type JWTContent<T, SUB extends string> = {
 };
 export type RegisterJWTPayload = {
 	user_id: string;
-};
-
-export type AuthToken = {
-	token: string;
-	activated: boolean;
-	expiration_date: string;
-	app_id: string;
-	user_id: string;
-	ecosystem_user_id: string;
+	device_id: string;
 };
 
 export type ConfigResponse = {
 	blockchain: {
-	 horizon_url: string;
-	 network_passphrase: string;
-	 asset_issuer: string;
-	 asset_code: string;
+		horizon_url: string;
+		network_passphrase: string;
+		asset_issuer: string;
+		asset_code: string;
 	};
 };
 
-export type RegisterMarketplaceClientPayload = {
-	device_id: string;
-	wallet_address: string;
-	sign_in_type: "jwt";
-	jwt: string
-};
+export type UserData = Array<[string, string]>;
+
 export type ApiError = {
 	code: number;
 	error: string;
 	message: string;
 };
 
-async function register(base: string, data: RegisterMarketplaceClientPayload) {
-	const res = await axios.post<AuthToken>(`${ base }/v1/users`, data);
-	return res.data;
+type AccountData = Array<{
+	user_id: string,
+	device_id: string,
+	public_address: string,
+	private_key: string,
+}>;
+
+async function createUsers(base: string, userData: UserData, output_stream: NodeJS.WriteStream) {
+	await axios({
+		method: "post",
+		data: { user_data: userData },
+		url: `${ base }/partners/v1/users/bulk`,
+		responseType: "stream"
+	}).then(response => {
+		response.data.pipe(output_stream);
+	}, error => {
+		error.response.data.pipe(process.stdout);
+		throw new Error(error);
+	});
 }
 
-async function getConfig(base: string) {
-	const res = await axios.get<ConfigResponse>(`${ base }/v1/config`);
-	return res.data.blockchain;
+export function getCsvData(filename: string): string[][] {
+	if (!filename) {
+		console.error("filename is required");
+		throw new Error("filename is required");
+	}
+	const csv = readFileSync(filename);
+	return (csvParse as CsvParse)(csv);
+}
+
+export async function writeCsvToFile(fileName: string, data: AccountData) {
+	const options: ExportCsvOptions = {
+		fieldSeparator: ",",
+		quoteStrings: "\"",
+		decimalseparator: ".",
+		showLabels: true,
+		showTitle: true,
+		title: "Accounts details",
+		useBom: true,
+		useKeysAsHeaders: true,
+	};
+
+	const csvExporter = new ExportToCsv(options);
+	const csvData = csvExporter.generateCsv(data, true);
+
+	try {
+		writeFileSync(fileName, csvData);
+	} catch (e) {
+		console.log("Error writing CSV to file ", fileName, " error ", e);
+	}
+	console.log("CSV written to file", fileName);
 }
 
 async function main() {
-	const keypair = Keypair.random();
 	if (process.argv.length < 5) {
-		throw new Error("usage: npm run create-wallet -- <beta|production> <device_id> <JWT>");
+		throw new Error("usage: npm run create-wallet -- <beta|prod> <INPUT_FILE> <OUTPUT_FILE>" +
+			" \n INPUT_FILE - File of a line separated list of registration JWTs" +
+			" \n OUTPUT_FILE - name of the CSV file to be written with the created account data");
 	}
 	const env = process.argv[2];
-	const deviceId = process.argv[3];
-	const jwt = process.argv[4];
-	let marketplace_base: string;
+	const input_filename = process.argv[3];
+	const output_filename = process.argv[4];
+	let marketplaceBase: string;
 
 	if (env === "beta") {
-		marketplace_base = BETA;
-	} else if (env === "production") {
-		marketplace_base = PRODUCTION;
+		marketplaceBase = BETA;
+	} else if (env === "prod") {
+		marketplaceBase = PRODUCTION;
+	} else if (env === "test") {
+		marketplaceBase = TEST;
 	} else {
 		throw new Error("env must be beta or production");
 	}
-
-	const decoded = jsonwebtoken.decode(jwt, { complete: true }) as JWTContent<RegisterJWTPayload, "register">;
-	console.log(`${ decoded.payload.user_id }@${ deviceId }) address: <${keypair.publicKey()}> secret key: <${keypair.secret()}>`);
-	try {
-		const authToken = await register(marketplace_base, { device_id: deviceId, sign_in_type: "jwt", wallet_address: keypair.publicKey(), jwt });
-		console.log(`auth token: <${authToken.token}>`);
-	} catch (err) {
-		const apiError: ApiError = err.response!.data;
-		throw new Error(apiError.message);
+	if (!fileExistsSync(input_filename)) {
+		throw Error(`Input file does NOT exists`);
 	}
-
-	const config = await getConfig(marketplace_base);
-	const network = KinNetwork.from(
-		config.network_passphrase,
-		config.asset_issuer,
-		config.horizon_url);
-
-	const wallet = await createWallet(network, keypair);
-	await wallet.trustKin();
+	if (fileExistsSync(output_filename)) {
+		throw Error(`Output file already exists (We don't want to overwrite your existing private keys`);
+	}
+	console.log(`Environment: ${ env }, input file: ${ input_filename }, output file: ${ output_filename }`);
+	const jwtList = getCsvData(input_filename);
+	const bulkCreationList: UserData = []; // List sent to the server (list of [jwt, public address])
+	const results = jwtList.map(([jwt]) => {
+		const decodedJwt = jsonwebtoken.decode(jwt, { complete: true }) as JWTContent<RegisterJWTPayload, "register">;
+		const keypair = Keypair.random();
+		bulkCreationList.push([jwt, keypair.publicKey()]);
+		return {
+			user_id: decodedJwt.payload.user_id,
+			device_id: decodedJwt.payload.device_id,
+			public_address: keypair.publicKey(),
+			private_key: keypair.secret(),
+		};
+	});
+	console.log(`Creating ${ bulkCreationList.length } user accounts`);
+	writeCsvToFile(output_filename, results);
+	await createUsers(marketplaceBase, bulkCreationList, process.stdout);
 }
 
-main().then(() => console.log("done!")).catch((err: Error) => console.error(`failed: ${err.message}`));
+main().then(() => {
+}).catch((err: Error) => console.error(`failed: ${ err.message }`));

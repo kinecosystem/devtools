@@ -2,53 +2,37 @@
 
 ## building the project
 
-This is a typescript project, therfore it needs to be transpiled
+This is a Typescript project, therefore it needs to be transpile. The NPM script `build` runs a linter and the Typescript transpiler.
+
+Run:
 ```
-npm run lint
 npm run build
 ```
 
-## `create-wallet`
-A script to createa local address and private key and run the register process to assign these keys to a user.
+## create-accounts
+A script to create user accounts in bulk with public/private key pairs for their kin wallets.
 
 ### Usage
 ```
-$> npm run create-wallet -- <beta|production> <device_id> <JWT>
+$> npm run create-accounts -- <beta|production> <input_file> <output_file>
 ```
-* beta|production - which environment to register to
-* device_id - a device_id to associate this user to (can be anything you choose)
-* JWT - a registration JWT as described [here](https://github.com/kinecosystem/ecosystem-api#register-payload)
+* beta|prod - which environment to register to.
+* input_file - Path to a file with a line separated list of registration JWTs*.
+* output_file - Path to write the new created account info to.
+ 
+	_\* Registration JWT as described [here](https://github.com/kinecosystem/ecosystem-api#register-payload)_
+	
+	Example:
+	`npm run create-accounts -- beta user_jwt.csv created_accounts.csv`
 
-### Example
-Create a wallet for user *doody_test_1* with device *test_device* on *beta*.
-```
-$> npm run create-wallet -- beta test_device eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImVzMjU2XzAifQ.eyJpc3MiOiJ0ZXN0IiwiZXhwIjoxNTQwODQ5NzE4NTM2LCJpYXQiOjE1NDA4MjgxMTg1MzYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6ImRvb2R5X3Rlc3RfMSJ9.6sfbb6dtQtiisG_ZYaetOw2WyGjBXIIdnMCpbxHvPj73W-Ik67cUJIApnusGxc4hWg0jHC1iFQwFjrue5Kdi2
+### Example JWT File Content
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDEiLCJkZXZpY2VfaWQiOiJkZXZpY2UxIn0.KbWiy6x3DnMz_w65MhtG0ltxFi0ZtvVUVJJJPoZzoWbD44ptZL94PZKeII2JnoAay5G-GFqFFjcdBLULPG4HQA
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDIiLCJkZXZpY2VfaWQiOiJkZXZpY2UyIn0.mYWqXu0lyShP435j7uK7zXIkIlRmtNl9-8UGKEl-9vMAUyF8vnkIHLGkP1iPaoHnKsaz5uTmHYdUNRWz9ae5-A
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDMiLCJkZXZpY2VfaWQiOiJkZXZpY2UzIn0.BaHICSSsfLLl0Zzo_gGPdDQbiIvnAcccvWUh-6GImgIgbstKxqqB0-DrdkV50UWFnbdvVwPD9RLGoQOkqqspiw
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDQiLCJkZXZpY2VfaWQiOiJkZXZpY2U0In0.4mgA_2xmuu0rxPx3OFYeUyl2lL3e1dlKe1blcDQTHjcId3jmEx6bfHtsPZoo3vw1kpqvZj83lQgxfAM_jJ788A
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDUiLCJkZXZpY2VfaWQiOiJkZXZpY2U1In0.eg3-_MSpUEpatWIT-JBML4TEwZ8nDbl41Iux66taWvvreoge4EYX9WqHkqTIR0jw-BLC0O8CInw_oCiwBiUJ8w
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDYiLCJkZXZpY2VfaWQiOiJkZXZpY2U2In0.t8CZIC0Y7eBN5yBT46NrT2iEEqupo3UqpPRqJkF6Z-zu9ZcIAMnG0yRbU8FGMTzBaT5ZnFEkLxUYngRDDqxj_w
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDciLCJkZXZpY2VfaWQiOiJkZXZpY2U3In0.XwJlun34fezhn_-DUj6N2F1HSsgevI3HfPCeCSEyk5kNQN-dWbARTsE7WR7ANsj4tcFV4yn1eQOvnFwTnbrRbw
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDgiLCJkZXZpY2VfaWQiOiJkZXZpY2U4In0.cQQHzfBjvYolZKOJu0DQJL9PBEzM4fmOKZJ46V4R09Ui4kkAX3NPArfCfzstsuUfB1_ThzamKlSdIl6bQT9gkQ
+eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRlZmF1bHQifQ.eyJpc3MiOiJzbXBsIiwiZXhwIjoxNTYwMTkxODQ2LCJpYXQiOjE1NjAxNzAyNDYsInN1YiI6InJlZ2lzdGVyIiwidXNlcl9pZCI6IlVTRVJJRDkiLCJkZXZpY2VfaWQiOiJkZXZpY2U5In0.V_w45H1MN5eIXjz2fAg1sCiinOIinfaKvdNmR9i_YZSMaiH1uGOEpZYQA4ORzeHBYRSmSpn7qKKREbxET4u5YQ
 
-doody_test_1@test_device) address: <GBIVJXWSQTLJFSCWUZYPIHUHIPJRWIPMSX52R2OL62UKZ7F642QY6TIG> secret key: <SDT3CBJMQI....................EZ7HT2OGLRC>
-auth token: <SOME_TOKEN>
-```
-
-### Test User Creation
-Using the token created from the previous step:
-
-#### Beta
-```
-$> curl -IH 'Authorization: Bearer SOME_TOKEN' https://api.kinecosystembeta.com/v1/users/me
-```
-#### Production
-```
-$> curl -IH 'Authorization: Bearer SOME_TOKEN' https://api.kinmarketplace.com/v1/users/me
-```
-
-Should return `HTTP 200 OK`.
-
-### Test Wallet Creation
-Using the public address:
-#### Beta
-```
-curl https://horizon-playground.kininfrastructure.com/accounts/USER_PUBLIC_ADDRESS | jq -r '.balances[] | select(.asset_code=="KIN") | .balance'
-```
-#### Production
-```
-curl https://horizon-kin-ecosystem.kininfrastructure.com/accounts/USER_PUBLIC_ADDRESS | jq -r '.balances[] | select(.asset_code=="KIN") | .balance'
-```
