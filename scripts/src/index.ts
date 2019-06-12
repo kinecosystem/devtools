@@ -58,6 +58,7 @@ type AccountData = Array<{
 }>;
 
 async function createUsers(base: string, userData: UserData, output_stream: NodeJS.WriteStream) {
+	console.log(`Creating ${ userData.length } user accounts`);
 	await axios({
 		method: "post",
 		data: { user_data: userData },
@@ -143,9 +144,18 @@ async function main() {
 			private_key: keypair.secret(),
 		};
 	});
-	console.log(`Creating ${ bulkCreationList.length } user accounts`);
 	writeCsvToFile(output_filename, results);
-	await createUsers(marketplaceBase, bulkCreationList, process.stdout);
+	const batchSize = 500;
+	const batchDelay = 30 * 1000;  // 30 seconds
+	for (let i = 0; i < (bulkCreationList.length - 1); i += batchSize) {
+		const chunk = bulkCreationList.slice(i, i + batchSize);
+		await createUsers(marketplaceBase, chunk, process.stdout);
+		await delay(batchDelay);
+	}
+}
+
+function delay(ms: number) {
+	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 main().then(() => {
