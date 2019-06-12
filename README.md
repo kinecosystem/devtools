@@ -11,6 +11,7 @@ npm run build
 
 ## create-accounts
 A script to create user accounts in bulk with public/private key pairs for their kin wallets.
+The script will send the requests to the server in batches of 500 users every 30 seconds.
 
 ### Usage
 ```
