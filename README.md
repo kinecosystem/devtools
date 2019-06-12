@@ -1,6 +1,6 @@
 # Developer Tools for KIN Devs
 
-## building the project
+## Building the project
 
 This is a Typescript project, therefore it needs to be transpile. The NPM script `build` runs a linter and the Typescript transpiler.
 
@@ -9,7 +9,7 @@ Run:
 npm run build
 ```
 
-## create-accounts
+## Create-accounts
 A script to create user accounts in bulk with public/private key pairs for their kin wallets.
 The script will send the requests to the server in batches of 500 users every 30 seconds.
 
