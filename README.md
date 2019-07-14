@@ -52,3 +52,11 @@ user_id,device_id,public_address,private_key
 - "issuer (iss) field of all supplied JWT must match" - the JWT's app_id are not identical in the input file.
 - "No such App" - the JWT's app_id does not exist.
 - "Bulk creation of 10 is allowed for app smpl, 50 requested" - Bulk limitation. Please contact support for this error.
+
+
+### Best Practices
+
+- The script is a temporary solution to allow ramping up wallet creation and get the numbers going. We have plans to create a more robust and permanent solution.
+- The wallet address and private keys need to be kept together with app_id's unique user ID - This table needs to be encrypted
+- We recommend on consulting your legal team regarding the privacy and finance implications of using the suggested script and holding Kin on behalf of your users
+- You will need to create a flow allowing a user to claim the Kin sent to them by other users - This might be a great user acquisition channel for mobile experience
