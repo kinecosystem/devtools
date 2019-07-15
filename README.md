@@ -6,6 +6,9 @@ This is a Typescript project, therefore it needs to be transpile. The NPM script
 
 Run:
 ```
+npm install
+```
+```
 npm run build
 ```
 
