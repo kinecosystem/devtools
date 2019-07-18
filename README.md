@@ -20,7 +20,7 @@ The script will send the requests to the server in batches of 500 users every 30
 ```
 $> npm run create-accounts -- <beta|prod> <input_file> <output_file>
 ```
-* beta|production - which environment to register to.
+* beta|prod - which environment to register to.
 * input_file - Path to a file with a line separated list of registration JWTs*.
 * output_file - Path to write the new created account info to.
  
