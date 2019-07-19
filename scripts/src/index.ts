@@ -61,6 +61,7 @@ async function createUsers(base: string, userData: UserData, output_stream: Node
 	console.log(`Sending batch of ${ userData.length } users`);
 	await axios({
 		method: "post",
+		headers: { "content-type": "application/bigjson" },
 		data: { user_data: userData },
 		url: `${ base }/partners/v1/users/bulk`,
 		responseType: "stream"
