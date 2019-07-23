@@ -60,6 +60,6 @@ user_id,device_id,public_address,private_key
 ### Best Practices
 
 - The script is a temporary solution to allow ramping up wallet creation and get the numbers going. We have plans to create a more robust and permanent solution.
-- The wallet address and private keys need to be kept together with app_id's unique user ID - This table needs to be encrypted
+- The wallet address and private keys need to be kept together with app_id's unique user ID - This table needs to be encrypted and secured
 - We recommend on consulting your legal team regarding the privacy and finance implications of using the suggested script and holding Kin on behalf of your users
 - You will need to create a flow allowing a user to claim the Kin sent to them by other users - This might be a great user acquisition channel for mobile experience
