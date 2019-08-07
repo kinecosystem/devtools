@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
+    "target": "es2018",
     "outDir": "bin",
-    "target": "ES6",
+    "rootDir": "src",
     "module": "commonjs",
-    "lib": ["dom","es2017"],
+    "lib": ["es2018"],
 
     "strict": true,
     "sourceMap": true,
