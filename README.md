@@ -12,7 +12,7 @@ npm install
 npm run build
 ```
 
-## create-accounts
+# create-accounts
 A script to create user accounts in bulk with public/private key pairs for their kin wallets.
 The script will send the requests to the server in batches of 500 users every 30 seconds.
 
@@ -67,7 +67,7 @@ user_id,device_id,public_address,private_key
 
 
 
-## migrate-wallets
+# migrate-wallets
 Mass kin2 wallet to kin3 migration tool. Specifically it is intended to work with the output of the `create-accounts` script.
 The migration of each wallets comprises two steps:
 1. Burning the Kin2 wallet (which will make it unusable) - THIS ACTION IS NOT REVERSIBLE.
