@@ -76,7 +76,7 @@ The migration of each wallets comprises two steps:
 
 --**MIGRATION IS A ONE WAY OPERATION**--
 
-When the script is finished it will print a out a report of total migrations and errors (if any occurred).
+When the script is finished it will print a out a report of total migrations and if any errors occurred relevant errored wallet information.
 
 Note:
  * Since the script is intended to work with the `create-accounts` output it always ignores the first 3 lines.
