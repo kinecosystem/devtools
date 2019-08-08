@@ -70,19 +70,18 @@ user_id,device_id,public_address,private_key
 # migrate-wallets
 Mass kin2 wallet to kin3 migration tool. Specifically it is intended to work with the output of the `create-accounts` script.
 The migration of each wallets comprises two steps:
-1. Burning the Kin2 wallet (which will make it unusable) - THIS ACTION IS NOT REVERSIBLE.
+1. Burning the Kin2 wallet (which will make it unusable) - THIS ACTION IS IRREVERSIBLE!
 
 2. Request the creation of an equivalent (Key-pair and balance wise) Kin3 wallet.
 
---**MIGRATION IS A ONE WAY OPERATION**--
 
 When the script is finished it will print a out a report of total migrations and if any errors occurred relevant errored wallet information.
 
 Note:
- * Since the script is intended to work with the `create-accounts` output it always ignores the first 3 lines.
- * It is advised to use `| tee OUTPUT_FILE` in order to save the output logging of the script to a file as well as to stdout.
- * Wallet list will be split into chunks
- * This step will be skipped for wallets that have been burned ahead of running this script.
+* Since the script is intended to work with the `create-accounts` output, it will ignore the first 3 lines of the input file.
+* It is advised to use `| tee OUTPUT_FILE` in order to save the output logging of the script to a file as well as to stdout.
+* Wallet list will be split into chunks
+* This step will be skipped for wallets that have been burned ahead of running this script.
  
 ### Usage
 ```
